@@ -37,7 +37,7 @@ instance.interceptors.response.use(
   }
 )
 
-const request = (url: string, method: Method, submitData?: object) => {
+const request = (url: string, method: Method = 'get', submitData?: object) => {
   return instance({
     url,
     method,

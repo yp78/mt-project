@@ -1,13 +1,12 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Hoon from '../views/hoon.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'hoon',
-      component: Hoon
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/Login/Login.vue')
     }
     // {
     //   path: '/about',
