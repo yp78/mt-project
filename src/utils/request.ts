@@ -32,7 +32,7 @@ instance.interceptors.response.use(
     if (err.response.status == 401) {
       const store = useUserStore()
       store.delUser()
-      router.push(`/login?${router.currentRoute.value.fullPath}`)
+      router.push(`/login?returnUrl=${router.currentRoute.value.fullPath}`)
     }
     return Promise.reject(err)
   }

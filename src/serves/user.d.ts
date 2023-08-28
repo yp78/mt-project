@@ -1,4 +1,1 @@
-export interface loginConfig {
-  mobile: string
-  password: string
-}
+export type CodeTypeRules = 'login' | 'register' | 'changeMobile' | 'forgetPassword' | 'bindMobile'

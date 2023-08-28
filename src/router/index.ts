@@ -12,6 +12,11 @@ const router = createRouter({
       path: '/zhuce',
       name: 'zhuce',
       component: () => import('../views/zhuce/zhuCe.vue')
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: () => import('../views/User/index.vue')
     }
     // {
     //   path: '/about',

@@ -1,28 +1,57 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ref, reactive } from 'vue'
-import { mobileRules, passwordRules } from '@/utils/rules'
-import type { loginConfig } from '@/serves/user.d'
+import { mobileRules, passwordRules, codeRules } from '@/utils/rules'
+import { loginApi, loginByApi, sendMobileCode } from '@/serves/user'
 import { showToast } from 'vant'
 const agree = ref(false)
 const show = ref<boolean>(false)
 const router = useRouter()
+const route = useRoute()
+const isPass = ref<boolean>(true)
 
 const clickright = () => {
   router.push('/zhuce')
 }
-const loginForm = reactive<loginConfig>({
+const loginForm = reactive({
   mobile: '',
-  password: ''
+  password: '',
+  code: ''
 })
 
-const onSubmit = () => {
-  console.log(1234)
+const onSubmit = async () => {
   if (!agree.value) {
-    console.log('123')
     showToast('请勾选我已同意')
     return
   }
+  try {
+    const loginRes = isPass.value
+      ? await loginApi(loginForm.mobile, loginForm.password)
+      : await loginByApi(loginForm.mobile, loginForm.code)
+
+    console.log('loginRes', loginRes)
+    router.replace((route.query.returnUrl as string) || '/user')
+
+    // 提示登录成功
+    showToast('登录成功')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const time = ref(0)
+let timeId: number = 0
+const sendCode = async () => {
+  if (time.value > 0) return
+  const codeRes = await sendMobileCode(loginForm.mobile, 'login')
+  console.log('codeRes', codeRes)
+  showToast('发送成功')
+  time.value = 60
+  clearInterval(timeId)
+  timeId = setInterval(() => {
+    time.value--
+    if (time.value <= 0) clearInterval(timeId)
+  }, 1000)
 }
 </script>
 
@@ -30,9 +59,9 @@ const onSubmit = () => {
   <div class="login-page">
     <cp-nav-bar :title="'登录'" :text="'注册'" @click-right="clickright"></cp-nav-bar>
     <div class="login-head">
-      <h3>密码登录</h3>
+      <h3>{{ isPass ? '密码登录' : '短信验证码登录' }}</h3>
       <a href="javascript:;">
-        <span>短信验证码登录</span>
+        <span @click="isPass = !isPass">{{ isPass ? '短信验证码登录' : '密码登录' }}</span>
         <van-icon name="arrow"></van-icon>
       </a>
     </div>
@@ -44,6 +73,7 @@ const onSubmit = () => {
         type="tel"
       />
       <van-field
+        v-if="isPass"
         :rules="passwordRules"
         v-model="loginForm.password"
         placeholder="请输入密码"
@@ -51,6 +81,11 @@ const onSubmit = () => {
       >
         <template #button>
           <cp-icons :name="`login-eye-${show ? 'on' : 'off'}`" @click="show = !show"></cp-icons>
+        </template>
+      </van-field>
+      <van-field v-else :rules="codeRules" v-model="loginForm.code" placeholder="请输入密码">
+        <template #button>
+          <span @click="sendCode">{{ time > 0 ? time + 's后再次发送' : '获取验证码' }}</span>
         </template>
       </van-field>
       <div class="cp-cell">
