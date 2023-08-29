@@ -25,3 +25,17 @@ export const getUserApi = () => {
 export const getPatientApi = () => {
   return request<patientType[]>('/patient/mylist')
 }
+
+export const addPatient = (patient: patientType) => {
+  return request('/patient/add', 'POST', patient)
+}
+
+//编辑患者信息
+export const editPatient = (patient: patientType) => {
+  return request('/patient/update', 'put', patient)
+}
+
+//删除患者信息
+export const delPatient = (id: string) => {
+  return request(`/patient/del/${id}`, 'DELETE')
+}

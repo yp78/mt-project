@@ -60,14 +60,4 @@ const router = createRouter({
     }
   ]
 })
-
-// router.beforeEach((to) => {
-//   // ⽤户仓库
-//   const store = useUserStore()
-//   // 不需要登录的⻚⾯，⽩名单
-//   const whiteList = ['/login', '/zhuce', '/404', '401']
-//   // 如果没有登录且不在⽩名单内，去登录
-//   if (!store.user?.token && !whiteList.includes(to.path)) return '/login'
-//   // 否则不做任何处理
-// })
 export default router

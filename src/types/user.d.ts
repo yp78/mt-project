@@ -24,7 +24,7 @@ export type UserInfo = OmitUser & {
 
 export type patientType = {
   // 患者ID
-  id: string
+  id?: string | number
   // 患者名称
   name: string
   // 身份证号
@@ -34,7 +34,7 @@ export type patientType = {
   // 0 ⼥ 1 男
   gender: 0 | 1
   // 性别⽂字
-  genderValue: string
+  genderValue?: string
   // 年龄
-  age: number
+  age?: number
 }

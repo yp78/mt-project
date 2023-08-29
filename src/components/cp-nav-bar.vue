@@ -4,6 +4,9 @@ const router = useRouter()
 
 const emit = defineEmits(['click-right'])
 const onClickLeft = () => {
+  if (props.back) {
+    return props.back()
+  }
   if (history.state?.back) {
     router.back()
   } else {
@@ -13,10 +16,11 @@ const onClickLeft = () => {
 const onClickRight = () => {
   emit('click-right')
 }
-const props = defineProps({
-  title: String,
-  text: String
-})
+const props = defineProps<{
+  title?: string
+  text?: string
+  back?: () => void
+}>()
 </script>
 
 <template>
