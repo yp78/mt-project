@@ -13,7 +13,7 @@ instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const store = useUserStore()
     if (store.user?.token) {
-      config.headers.Authorization = 'Bearer' + store.user.token
+      config.headers.Authorization = 'Bearer ' + store.user.token
     }
     return config
   },

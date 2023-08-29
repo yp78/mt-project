@@ -4,12 +4,15 @@ import { ref, reactive } from 'vue'
 import { mobileRules, passwordRules, codeRules } from '@/utils/rules'
 import { loginApi, loginByApi, sendMobileCode } from '@/serves/user'
 import { showToast } from 'vant'
+import { onUnmounted } from 'vue'
+import { useUserStore } from '@/stores/user'
 const agree = ref(false)
 const show = ref<boolean>(false)
 const router = useRouter()
 const route = useRoute()
 const isPass = ref<boolean>(true)
 
+const store = useUserStore()
 const clickright = () => {
   router.push('/zhuce')
 }
@@ -30,7 +33,8 @@ const onSubmit = async () => {
       : await loginByApi(loginForm.mobile, loginForm.code)
 
     console.log('loginRes', loginRes)
-    router.replace((route.query.returnUrl as string) || '/user')
+    store.setUser(loginRes.data)
+    router.replace((route.query.returnUrl as string) || '/layout')
 
     // 提示登录成功
     showToast('登录成功')
@@ -53,6 +57,9 @@ const sendCode = async () => {
     if (time.value <= 0) clearInterval(timeId)
   }, 1000)
 }
+onUnmounted(() => {
+  clearInterval(timeId)
+})
 </script>
 
 <template>

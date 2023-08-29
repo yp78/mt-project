@@ -4,7 +4,7 @@ defineProps<{ name: string }>()
 
 <template>
   <svg aria-hidden="true" class="cp-icon">
-    <use :href="`#icon-${name}`" />
+    <use :href="`#icon-${name}`"></use>
   </svg>
 </template>
 
