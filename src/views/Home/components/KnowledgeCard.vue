@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { KnowledgeType } from '@/types/KnowledgeType'
+import { useFollow } from './index'
+const { flaglink, loading } = useFollow('knowledge')
 defineProps<{
   item: KnowledgeType
 }>()
@@ -15,7 +17,9 @@ defineProps<{
           {{ item.creatorTitles }}
         </p>
       </div>
-      <van-button color="#43bec4" round plain>+ 关注</van-button>
+      <van-button :loading="loading" color="#43bec4" round plain @click="flaglink(item)">{{
+        item.likeFlag === 1 ? '已关注' : '+ 关注'
+      }}</van-button>
     </div>
     <h3>{{ item.title }}</h3>
     <p class="p"><span># 肥胖</span><span># 养生</span></p>

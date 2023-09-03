@@ -105,6 +105,7 @@ const tools = [
 <style lang="scss" scoped>
 .user {
   &-page {
+    padding-bottom: 50px;
     width: 100vw;
     min-height: calc(100vh - 65px);
     background-color: var(--cp-bg);

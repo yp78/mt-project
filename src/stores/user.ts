@@ -1,5 +1,5 @@
-import type { User } from '@/types/user.d.ts'
 import { defineStore } from 'pinia'
+import type { User } from '@/types/user.d.ts'
 import { ref } from 'vue'
 
 export const useUserStore = defineStore(

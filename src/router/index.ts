@@ -16,7 +16,38 @@ const router = createRouter({
     {
       path: '/user/patient',
       name: 'patient',
-      component: () => import('../views/User/PatientList.vue')
+      component: () => import('../views/User/PatientList.vue'),
+      meta: { title: '家庭档案' }
+    },
+    {
+      path: '/consult/fast',
+      name: 'fast',
+      component: () => import('../views/consult/ConsultFast.vue'),
+      meta: { title: '极速问诊' }
+    },
+    {
+      path: '/consult/dep',
+      name: 'dep',
+      component: () => import('../views/consult/ConsultDep.vue'),
+      meta: { title: '选择科室' }
+    },
+    {
+      path: '/consult/illness',
+      name: 'illness',
+      component: () => import('../views/consult/ConsultIllness.vue'),
+      meta: { title: '图文问诊' }
+    },
+    {
+      path: '/user/consult',
+      name: 'consult',
+      component: () => import('../views/User/UserConsult.vue'),
+      meta: { title: '问诊记录' }
+    },
+    {
+      path: '/consult/pay',
+      name: 'pay',
+      component: () => import('../views/consult/ConsultPay.vue'),
+      meta: { title: '支付' }
     },
     {
       path: '/layout',
@@ -45,7 +76,7 @@ const router = createRouter({
           name: 'notify',
           component: () => import('../views/Notify/index.vue'),
           meta: {
-            title: '消息中心'
+            title: '消息通知'
           }
         },
         {
@@ -53,11 +84,12 @@ const router = createRouter({
           name: 'user',
           component: () => import('../views/User/index.vue'),
           meta: {
-            title: '我的'
+            title: '个人中心'
           }
         }
       ]
     }
   ]
 })
+
 export default router

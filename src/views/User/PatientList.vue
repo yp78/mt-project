@@ -5,13 +5,29 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { showToast } from 'vant'
 import Validator from 'id-validator'
 import { showConfirmDialog } from 'vant'
+import { useRoute, useRouter } from 'vue-router'
+import { useConsultStore } from '@/stores/consult'
 
+const store = useConsultStore()
+const route = useRoute()
+const router = useRouter()
 const list = ref<patientType[]>()
 const show = ref<boolean>(false)
 
+const isChange = computed(() => {
+  return route.query.isChange
+})
 const getPatient = async () => {
   const res = await getPatientApi()
   list.value = res.data
+  if (isChange.value && list.value.length) {
+    const defPatient = list.value.find((item) => item.defaultFlag === 1)
+    if (defPatient) {
+      patienId.value = defPatient.id as string
+    } else {
+      patienId.value = list.value[0].id as string
+    }
+  }
 }
 getPatient()
 const initPatient: patientType = reactive({
@@ -69,13 +85,37 @@ const remove = async () => {
       // on cancel
     })
 }
+// 选择患者
+let patienId = ref<string>('')
+const selectedPatient = (item: patientType) => {
+  if (isChange.value) {
+    patienId.value = item.id as string
+  }
+}
+
+const next = () => {
+  if (!patienId.value) return showToast('请选就诊择患者')
+
+  store.patientId(patienId.value)
+  router.push('/consult/pay')
+}
 </script>
 
 <template>
   <div class="patient-page">
-    <cp-nav-bar title="家庭档案"></cp-nav-bar>
+    <cp-nav-bar :title="isChange ? '选择患者' : '家庭档案'"></cp-nav-bar>
+    <div class="patient-change" v-if="isChange">
+      <h3>请选择患者信息</h3>
+      <p>以便医生给出更准确的治疗，信息仅医生可见</p>
+    </div>
     <div class="patient-page-main">
-      <div class="patient" v-for="(item, index) in list" :key="index">
+      <div
+        class="patient"
+        @click="selectedPatient(item)"
+        v-for="(item, index) in list"
+        :key="index"
+        :class="{ selected: item.id === patienId }"
+      >
         <div class="left">
           <p style="display: flex; justify-content: space-between">
             <span>{{ item.name }}</span>
@@ -142,6 +182,11 @@ const remove = async () => {
         ><van-action-bar-button @click="remove">删除</van-action-bar-button></van-action-bar
       >
     </van-popup>
+
+    <!-- 底部按钮 -->
+    <div class="patient-next">
+      <van-button type="primary" @click="next" round block>下一步</van-button>
+    </div>
   </div>
 </template>
 
@@ -149,6 +194,16 @@ const remove = async () => {
 .patient-page {
   box-sizing: border-box;
   padding: 46px 0 80px;
+  .patient-change {
+    padding: 15px;
+    > h3 {
+      font-weight: normal;
+      margin-bottom: 5px;
+    }
+    > p {
+      color: var(--cp-text3);
+    }
+  }
   ::v-deep() {
     .van-popup {
       width: 80%;
@@ -168,6 +223,10 @@ const remove = async () => {
       margin: 10px 0;
       display: flex;
       justify-content: space-between;
+      &.selected {
+        border-color: var(--cp-primary);
+        background-color: var(--cp-plain);
+      }
       .left {
         width: 70%;
         height: 100%;

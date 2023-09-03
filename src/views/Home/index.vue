@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import KnowledgeList from './components/KnowledgeList.vue'
+import { useConsultStore } from '@/stores/consult'
+import { typelist } from '@/enum/index'
 
+const store = useConsultStore()
 const active = ref(1)
 </script>
 
@@ -19,7 +22,7 @@ const active = ref(1)
         <p class="p1">问医生</p>
         <p class="p2">按科室查问医⽣</p>
       </van-grid-item>
-      <van-grid-item to="/consult/fast">
+      <van-grid-item to="/consult/fast" @click="store.setType(typelist.inquiry)">
         <cp-icons name="home-graphic"></cp-icons>
         <p class="p1">极速问诊</p>
         <p class="p2">20s医⽣极速回复</p>

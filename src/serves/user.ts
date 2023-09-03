@@ -39,3 +39,8 @@ export const editPatient = (patient: patientType) => {
 export const delPatient = (id: string) => {
   return request(`/patient/del/${id}`, 'DELETE')
 }
+
+// 获取患者信息
+export const getPatientInfo = (id: string) => {
+  return request<patientType>(`/patient/info/${id}`, 'GET')
+}
