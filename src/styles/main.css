@@ -14,7 +14,7 @@
   --cp-bg: #F6F7F9;
   --cp-price: #EB5757;
   --van-primary-color: var(--cp-primary);
-  --van-button-primary-border-color: var(--cp-price);
+  --van-button-primary-border-color: var(--cp-primary);
   --van-button-primary-background: var(--cp-primary);
 }
 

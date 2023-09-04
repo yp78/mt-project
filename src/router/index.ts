@@ -50,6 +50,12 @@ const router = createRouter({
       meta: { title: '支付' }
     },
     {
+      path: '/room',
+      name: 'room',
+      component: () => import('../views/Room/index.vue'),
+      meta: { title: '支付' }
+    },
+    {
       path: '/layout',
       name: 'layout',
       component: () => import('../views/Layout/index.vue'),
