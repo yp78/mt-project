@@ -5,7 +5,8 @@ import type {
   ConsultOrderPreParams,
   PartialConsult,
   getOrderType,
-  Data
+  Data,
+  RowType
 } from '@/types/consultType'
 
 //请求科室
@@ -52,4 +53,14 @@ export const clearOrder = (id: string) => {
 //删除订单
 export const delOrder = (id: string) => {
   return request(`/patient/order/${id}`, 'DELETE')
+}
+
+//查看处方 /patient/consult/prescription/
+export const getPrescriptApi = (id: string | number) => {
+  return request<{ id: string; url: string }>(`/patient/consult/prescription/${id}`, 'GET')
+}
+
+//获取订单详情
+export const getOrderDetail = (orderId: string) => {
+  return request<RowType>('/patient/consult/order/detail', 'GET', { orderId })
 }

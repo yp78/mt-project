@@ -10,7 +10,7 @@ const onClickLeft = () => {
   if (history.state?.back) {
     router.back()
   } else {
-    router.push('/')
+    router.push('/home')
   }
 }
 const onClickRight = () => {

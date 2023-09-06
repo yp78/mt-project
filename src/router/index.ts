@@ -6,12 +6,14 @@ const router = createRouter({
     {
       path: '/',
       name: 'login',
-      component: () => import('../views/Login/inLogin.vue')
+      component: () => import('../views/Login/inLogin.vue'),
+      meta: { title: '登录' }
     },
     {
       path: '/zhuce',
       name: 'zhuce',
-      component: () => import('../views/zhuce/zhuCe.vue')
+      component: () => import('../views/zhuce/zhuCe.vue'),
+      meta: { title: '注册' }
     },
     {
       path: '/user/patient',
@@ -44,16 +46,28 @@ const router = createRouter({
       meta: { title: '问诊记录' }
     },
     {
+      path: '/user/consult/:id',
+      name: 'consultId',
+      component: () => import('../views/User/ConsultId.vue'),
+      meta: { title: '问诊详情' }
+    },
+    {
       path: '/consult/pay',
       name: 'pay',
       component: () => import('../views/consult/ConsultPay.vue'),
       meta: { title: '支付' }
     },
     {
+      path: '/order/pay',
+      name: 'orderPay',
+      component: () => import('../views/Order/OrderPay.vue'),
+      meta: { title: '药品支付' }
+    },
+    {
       path: '/room',
       name: 'room',
       component: () => import('../views/Room/index.vue'),
-      meta: { title: '支付' }
+      meta: { title: '医生问诊室' }
     },
     {
       path: '/layout',

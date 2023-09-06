@@ -40,7 +40,7 @@ export type consultType = {
   pictures?: picturesType[]
 }
 //问诊记录变成可选 Partial 将定义的必填类型转化为可选类型
-//Required 转化为全部必须  Patial 转化为全部可选  两个内置的泛型类型
+//Required 转化为全部必须  Partial 转化为全部可选  两个内置的泛型类型
 export type PartialConsult = Partial<consultType>
 //开药问诊-开药问诊的药品id集合
 export type medicType = {
@@ -147,7 +147,7 @@ export type Row = {
   /**
    * 找医生/极速问诊必有-是否就诊过0未就诊1就诊过
    */
-  consultFlag?: number
+  consultFlag: number
   /**
    * 倒计时-1表示计时已过(单位s)
    */
@@ -159,7 +159,7 @@ export type Row = {
   /**
    * 咨询的医生--找医生
    */
-  docInfo?: DocInfo
+  docInfo: DocInfo
   /**
    * 是否已经评价1 已评价0 未评价
    */
@@ -220,8 +220,18 @@ export type Row = {
    * 订单类型1问医生2极速问诊2开药问诊--默认是1
    */
   type?: number
+  //优惠卷
+  couponDeduction?: number
+  /**
+   * 积分可抵扣
+   */
+  pointDeduction?: number
+  /**
+   * 实付金额
+   */
+  actualPayment: number
 }
-
+export type RowType = Required<Row>
 /**
  * 咨询的医生--找医生
  */
@@ -287,7 +297,7 @@ export type PatientInfo = {
   /**
    * 患者性别
    */
-  gender: number
+  genderValue: number
   /**
    * 患者id
    */

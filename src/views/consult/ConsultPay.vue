@@ -4,10 +4,12 @@ import { getPatientInfo } from '@/serves/user'
 import { ref, computed, onMounted } from 'vue'
 import { useConsultStore } from '@/stores/consult'
 import type { ConsultOrderPreData } from '@/types/consultType'
-import { getConsultOrderPre, getOrderApi, getConsultOrderPayUrl } from '@/serves/consult.d'
+import { getConsultOrderPre, getOrderApi } from '@/serves/consult.d'
 import { showToast } from 'vant'
 import { onBeforeRouteLeave, useRouter } from 'vue-router' //路由回退
 import { showConfirmDialog } from 'vant'
+import cppaysheet from '@/components/CpPaySheet.vue'
+
 const store = useConsultStore()
 const router = useRouter()
 
@@ -47,7 +49,6 @@ initPatientInfo()
 const show = ref(false)
 const loading = ref(false)
 const orderId = ref('')
-const paymentMethod = ref()
 //立即支付按钮
 const submit = async () => {
   if (!agree.value) {
@@ -86,17 +87,6 @@ const onClose = () => {
 onBeforeRouteLeave(() => {
   if (orderId.value) return false
 })
-
-//跳转第三方支付页
-const pay = async () => {
-  if (!paymentMethod.value) return showToast('请选择支付方式')
-  const payRes = await getConsultOrderPayUrl({
-    paymentMethod: paymentMethod.value,
-    orderId: orderId.value,
-    payCallback: 'http://localhost:5173/#/room'
-  })
-  window.location.href = payRes.data.payUrl
-}
 
 //防止在当前页面刷新，问诊记录已经清空，组件初始化需要校验
 onMounted(() => {
@@ -168,28 +158,12 @@ onMounted(() => {
     <van-skeleton title :row="3" />
   </div>
 
-  <van-action-sheet
-    :beforeClose="onClose"
+  <cppaysheet
     v-model:show="show"
-    title="选择支付方式"
-    :closeable="false"
-    :close-on-popstate="false"
-  >
-    <p class="p">￥39.00</p>
-    <van-cell-group>
-      <van-cell title="微信⽀付" @click="paymentMethod = 0">
-        <template #icon><cp-icons class="icon" name="consult-wechat" /></template>
-        <template #extra><van-checkbox :checked="paymentMethod === 0" /></template>
-      </van-cell>
-      <van-cell title="⽀付宝⽀付" @click="paymentMethod = 1">
-        <template #icon><cp-icons class="icon" name="consult-alipay" /></template>
-        <template #extra><van-checkbox :checked="paymentMethod === 1" /></template>
-      </van-cell>
-    </van-cell-group>
-    <div class="btn">
-      <van-button type="primary" round block @click="pay">⽴即⽀付</van-button>
-    </div>
-  </van-action-sheet>
+    :orderId="orderId"
+    :actualPayment="payInfo?.actualPayment!"
+    :onClose="onClose"
+  ></cppaysheet>
 </template>
 
 <style lang="scss" scoped>
@@ -258,25 +232,6 @@ onMounted(() => {
       font-weight: normal;
       width: 160px;
     }
-  }
-}
-.van-action-sheet {
-  .p {
-    text-align: center;
-    height: 50px;
-    font-weight: bold;
-    border-bottom: 1px solid #f5f2f2;
-    line-height: 50px;
-  }
-  .van-cell {
-    height: 50px;
-    .icon {
-      font-size: 1.6em;
-      margin-right: 10px;
-    }
-  }
-  .btn {
-    padding: 15px;
   }
 }
 </style>
