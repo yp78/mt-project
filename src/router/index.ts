@@ -58,6 +58,12 @@ const router = createRouter({
       meta: { title: '支付' }
     },
     {
+      path: '/order/pay/result',
+      name: 'result',
+      component: () => import('../views/Order/OrderPayResult.vue'),
+      meta: { title: '支付状态' }
+    },
+    {
       path: '/order/pay',
       name: 'orderPay',
       component: () => import('../views/Order/OrderPay.vue'),

@@ -159,6 +159,7 @@ onMounted(() => {
   </div>
 
   <cppaysheet
+    payCallback="room"
     v-model:show="show"
     :orderId="orderId"
     :actualPayment="payInfo?.actualPayment!"

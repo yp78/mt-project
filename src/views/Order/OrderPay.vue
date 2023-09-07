@@ -1,8 +1,26 @@
 <script setup lang="ts">
-import { getaddress, getOrderDetail, addressResponse } from '@/serves/Order.d'
+import { getaddress, getOrderDetail, getmedicine } from '@/serves/Order.d'
 import { useRoute } from 'vue-router'
-import type { OrderRequest, OrderResponse } from '@/types/OrderType'
+import type { OrderRequest, OrderResponse, addressResponse } from '@/types/OrderType'
 import { ref } from 'vue'
+import { showToast } from 'vant'
+
+//支付
+const show = ref(false)
+const agree = ref(false)
+const orderId = ref('')
+const submit = async () => {
+  if (!agree.value) {
+    return showToast('请勾选⽀付协议')
+  }
+  show.value = true
+  const res = await getmedicine({
+    id: resorder.value?.prescriptionId,
+    addressId: address.value?.id!
+  })
+  console.log('res=>', res)
+  orderId.value = res.data.id
+}
 
 const details = ref<OrderResponse>()
 const address = ref<addressResponse>()
@@ -19,23 +37,25 @@ const getOredr = async () => {
   console.log('resaddress=>', resaddress)
   console.log('resDetail=>', resDetail)
   address.value = resaddress.data[0]
+  console.log(address.value)
+
   details.value = resDetail.data
 }
 getOredr()
 </script>
 
 <template>
-  <div class="order-pay-page">
+  <div class="order-pay-page" v-if="address">
     <cp-nav-bar title="药品支付"></cp-nav-bar>
     <div class="order-address">
       <p class="area">
         <van-icon name="location" />
-        <span>{{ address?.city + address?.county }}</span>
+        <span>{{ address.city + address.county }}</span>
       </p>
       <p class="detail">{{ address?.addressDetail }}</p>
       <p>
         {{ address?.receiver }}
-        {{ address?.mobile.replace(/^(\d{3})\d(\d{4})$/, '\${3}****\${4}') }}
+        {{ address.mobile.replace(/^(\d{3})\d+(\d{4})$/, '\$1****\$2') }}
       </p>
     </div>
     <div class="order-medical">
@@ -43,28 +63,28 @@ getOredr()
         <h3>优医药房</h3>
         <small>优医质保 假⼀赔⼗</small>
       </div>
-      <div class="item van-hairline--top" v-for="i in 2" :key="i">
-        <img class="img" src="@/assets/ad.png" alt="" />
+      <div class="item van-hairline--top" v-for="(item, index) in details?.medicines" :key="index">
+        <img class="img" :src="item.avatar" alt="" />
         <div class="info">
           <p class="name">
-            <span>优赛明 维⽣素E乳</span>
-            <span>x1</span>
+            <span>{{ item.name }}</span>
+            <span>x{{ item.quantity }}</span>
           </p>
           <p class="size">
             <van-tag>处⽅药</van-tag>
-            <span>80ml</span>
+            <span>{{ item.specs }}</span>
           </p>
-          <p class="price">￥25.00</p>
+          <p class="price">￥{{ item.amount }}</p>
         </div>
-        <div class="desc">⽤法⽤量：⼝服，每次1袋，每天3次，⽤药3天</div>
+        <div class="desc">⽤法⽤量：{{ item.usageDosag }}</div>
       </div>
     </div>
     <div class="order-detail">
       <van-cell-group>
-        <van-cell title="药品⾦额" value="￥50" />
-        <van-cell title="运费" value="￥4" />
-        <van-cell title="优惠券" value="-￥0" />
-        <van-cell title="实付款" value="￥54" class="price" />
+        <van-cell title="药品⾦额" :value="`￥${details?.payment}`" />
+        <van-cell title="运费" :value="`￥${details?.expressFee}`" />
+        <van-cell title="优惠券" :value="`-￥${details?.couponDeduction}`" />
+        <van-cell title="实付款" :value="`￥${details?.actualPayment}`" class="price" />
       </van-cell-group>
     </div>
     <div class="order-tip">
@@ -72,15 +92,24 @@ getOredr()
         由于药品的特殊性，如⾮错发、漏发药品的情况，药品⼀经发出
         不得退换，请核对药品信息⽆误后下单。
       </p>
-      <van-checkbox>我已同意<a href="javascript:;">⽀付协议</a></van-checkbox>
+      <van-checkbox v-model="agree">我已同意<a href="javascript:;">⽀付协议</a></van-checkbox>
     </div>
     <van-submit-bar
-      :price="50 * 100"
+      :price="Number(details?.actualPayment) * 100"
       button-text="⽴即⽀付"
       button-type="primary"
       text-align="left"
+      @click="submit"
     ></van-submit-bar>
   </div>
+
+  <CpPaySheet
+    payCallback="order/pay/result"
+    v-if="details?.actualPayment"
+    v-model:show="show"
+    :orderId="orderId"
+    :actualPayment="details?.actualPayment"
+  ></CpPaySheet>
 </template>
 
 <style lang="scss" scoped>

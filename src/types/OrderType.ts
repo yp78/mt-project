@@ -19,11 +19,11 @@ export type addressResponse = {
   /**
    * 是否为默认，1为是，0为否
    */
-  isDefault?: number
+  isDefault: number
   /**
    * 联系方式
    */
-  mobile?: string
+  mobile: string
   /**
    * 省份
    */
@@ -31,7 +31,7 @@ export type addressResponse = {
   /**
    * 收货人姓名
    */
-  receiver?: string
+  receiver: string
 }
 
 // 根据处方信息计算药款-----请求
@@ -122,4 +122,20 @@ export type Medicine = {
    * 药品用法用量
    */
   usageDosag: string
+}
+
+//根据处方下药品订单 --请求
+export type medicineType = {
+  /**
+   * 地址信息
+   */
+  addressId: string
+  /**
+   * 使用优惠券信息，不使用优惠券，不用传值
+   */
+  couponId?: string
+  /**
+   * 处方id
+   */
+  id: string
 }
