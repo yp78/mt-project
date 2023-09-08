@@ -51,3 +51,22 @@ export const usedelConsult = (cb?: (id: string | number) => void) => {
   }
   return { delConsult, deleteLoading }
 }
+
+//订单详情数据
+import { getmedicinedetail } from '@/serves/Order.d'
+import type { Data } from '@/types/OrderType'
+import { onMounted } from 'vue'
+export const useOrderDetail = (id: string) => {
+  const loading = ref(false)
+  const order = ref<Data>()
+  onMounted(async () => {
+    loading.value = true
+    try {
+      const res = await getmedicinedetail(id)
+      order.value = res.data
+    } finally {
+      loading.value = false
+    }
+  })
+  return { order, loading }
+}

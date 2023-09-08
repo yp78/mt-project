@@ -76,6 +76,18 @@ const router = createRouter({
       meta: { title: '医生问诊室' }
     },
     {
+      path: '/order/:id',
+      name: 'orderId',
+      component: () => import('../views/Order/OrderId.vue'),
+      meta: { title: '药品订单详情' }
+    },
+    {
+      path: '/order/logistics/:id',
+      name: 'logistics',
+      component: () => import('../views/Order/OrderLogistics.vue'),
+      meta: { title: '物流详情' }
+    },
+    {
       path: '/layout',
       name: 'layout',
       component: () => import('../views/Layout/index.vue'),

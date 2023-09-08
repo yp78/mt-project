@@ -1,9 +1,25 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { getmedicinedetail } from '@/serves/Order.d'
+import { useRoute } from 'vue-router'
+import type { Data } from '@/types/OrderType'
+import { OrderType } from '@/enum/index'
+import { ref } from 'vue'
+
+const route = useRoute()
+const item = ref<Data>()
+
+const getorderstatus = async () => {
+  const res = await getmedicinedetail(route.query.orderId as string)
+  console.log('res=>', res)
+  item.value = res.data
+}
+getorderstatus()
+</script>
 
 <template>
   <div class="order-pay-result-page">
     <cp-nav-bar title="药品支付结果" />
-    <!-- <div class="result" v-if="item?.status === OrderType.MedicinePay">
+    <div class="result" v-if="item?.status === OrderType.MedicinePay">
       <van-icon name="clear" />
       <p class="price">￥ {{ item?.actualPayment }}</p>
       <p class="status">支付失败</p>
@@ -19,7 +35,7 @@
     <div class="btn">
       <van-button type="primary" :to="`/order/${item?.id}`">查看订单</van-button>
       <van-button :to="`/room?orderId=${item?.roomId}`">返回诊室</van-button>
-    </div> -->
+    </div>
   </div>
 </template>
 
