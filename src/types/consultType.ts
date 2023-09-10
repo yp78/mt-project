@@ -63,6 +63,7 @@ export type Image = {
   id: string
   url: string
 }
+
 // 支付传参类型
 export type ConsultOrderPreParams = Pick<PartialConsult, 'type' | 'illnessType'>
 // 获取预支付信息返回类型

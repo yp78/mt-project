@@ -1,14 +1,32 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import RoomStatus from './components/RoomStatus.vue'
+import RoomAction from './components/RoomAction.vue'
+import RoomMessage from './components/RoomMessage.vue'
+import { ref } from 'vue'
+import type { Message, TimeMessages } from '@/types/RoomType'
+
+const list = ref<Message[]>()
+</script>
 
 <template>
   <div class="room-page">
     <cp-nav-bar title="医生问诊室"></cp-nav-bar>
-    <button @click="$router.push('/order/pay?id=6939262508085248')">购买药品</button>
+    <RoomStatus></RoomStatus>
+    <RoomAction></RoomAction>
+    <RoomMessage :list="list"></RoomMessage>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .room-page {
-  padding-top: 46px;
+  padding-top: 90px;
+  padding-bottom: 60px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: var(--cp-bg);
+  .van-pull-refresh {
+    width: 100%;
+    min-height: calc(100vh - 150px);
+  }
 }
 </style>
