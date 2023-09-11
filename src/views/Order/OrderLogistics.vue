@@ -7,14 +7,14 @@ import startImg from '@/assets/start.png'
 import endImg from '@/assets/end.png'
 import carImg from '@/assets/car.png'
 
+const route = useRoute()
 // 获取物流信息
 const logistics = ref<Logistics>()
-const route = useRoute()
-onMounted(async () => {
-  const res = await getMedicalOrderLogistics(route.params.id as string)
-  logistics.value = res.data
-  console.log('logistics', logistics.value)
-})
+// const initLogisticsDetail = async () => {
+//   const res = await getMedicalOrderLogistics(route.params.id as string)
+//   logistics.value = res.data
+// }
+// initLogisticsDetail()
 
 import AMapLoader from '@amap/amap-jsapi-loader'
 
@@ -22,7 +22,10 @@ window._AMapSecurityConfig = {
   securityJsCode: '415e917da833efcf2d5b69f4d821784b'
 }
 
-onMounted(() => {
+onMounted(async () => {
+  const res = await getMedicalOrderLogistics(route.params.id as string)
+  logistics.value = res.data
+
   AMapLoader.load({
     key: '4eed3d61125c8b9c168fc22414aaef7e',
     version: '2.0'
@@ -100,14 +103,6 @@ onMounted(() => {
           )
         }
       })
-
-      //将Icon 实例添加到 marker 上:
-      // const marker = new AMap.Marker({
-      //   position: [],
-      //   icon: iconProps,
-      //   zoom: 13
-      // })
-      //map.add(marker) //添加到地图
     })
     .catch((err) => {
       //加载错误

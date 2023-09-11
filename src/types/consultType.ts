@@ -1,4 +1,4 @@
-import { inquiry, FlagType, renal, allergic, liver, typelist, childtime, Status } from '@/enum'
+import { inquiry, FlagType, renal, allergic, liver, typelist, childtime, OrderType } from '@/enum'
 //查询科室
 export type childDep = {
   id: string
@@ -14,7 +14,7 @@ export type consultType = {
   // 就诊类型
   couponId?: string
   // 使用优惠券，必传可使用优惠券id
-  illnessType?: inquiry
+  illnessType: inquiry
   // 极速问诊类型：0普通1三甲
   patientId: string
   // 患者id,用于关联患者信息
@@ -22,7 +22,7 @@ export type consultType = {
   // 选择的科室id-极速问诊必填(选择的科室)
   illnessDesc: string
   // 病情--症状描述
-  illnessTime?: childtime
+  illnessTime: childtime
   // 找医生/极速问诊-患病时间1一周内2一月内3半年内4半年以上
   consultFlag?: FlagType
   // 找医生/极速问诊-是否就诊过0未就诊1就诊过
@@ -212,7 +212,7 @@ export type Row = {
   /**
    * 订单状态：图文问诊或者开药问诊的订单-1待支付2待接诊3咨询中4已完成5已取消/药品订单-10待支付11待发货12待收货13已完成14已取消
    */
-  status: Status
+  status: OrderType
   /**
    * 订单状态：图文问诊或者开药问诊的订单-1待支付2待接诊3咨询中4已完成5已取消/药品订单-10待支付11待发货12待收货13已完成14已取消
    */

@@ -104,13 +104,7 @@ const { delConsult, deleteLoading } = usedelConsult((id) => {
         @click="clearConsult(item)"
         >取消问诊</van-button
       >
-      <van-button
-        type="primary"
-        plain
-        size="small"
-        round
-        :to="`/room?
-orderId=${item.id}`"
+      <van-button type="primary" plain size="small" round :to="`/room?orderId=${item.id}`"
         >继续沟通</van-button
       >
     </div>
@@ -124,13 +118,7 @@ orderId=${item.id}`"
         @click="showImage(item.prescriptionId)"
         >查看处方</van-button
       >
-      <van-button
-        type="primary"
-        plain
-        size="small"
-        round
-        :to="`/room?
-orderId=${item.id}`"
+      <van-button type="primary" plain size="small" round :to="`/room?orderId=${item.id}`"
         >继续沟通</van-button
       >
     </div>
@@ -142,14 +130,7 @@ orderId=${item.id}`"
           @on-preview="showImage(item.prescriptionId as string)"
         ></CpConsultMore>
       </div>
-      <van-button
-        class="gray"
-        plain
-        size="small"
-        round
-        :to="`/room?
-orderId=${item.id}`"
-      >
+      <van-button class="gray" plain size="small" round :to="`/room?orderId=${item.id}`">
         问诊记录
       </van-button>
       <van-button v-if="!item.evaluateFlag" type="primary" plain size="small" round>
