@@ -12,6 +12,8 @@ import { getOrderDetail } from '@/serves/consult.d'
 import type { Row } from '@/types/consultType'
 import type { Socket } from 'socket.io-client'
 import { nextTick } from 'vue'
+import dayjs from 'dayjs'
+import { showLoadingToast } from 'vant'
 
 const list = ref<Message[]>()
 const store = useUserStore()
@@ -106,18 +108,31 @@ const sendImage = (data: { id: string; url: string }) => {
     }
   })
 }
+const loading = ref(false)
+const time = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
+const onRefresh = () => {
+  showLoadingToast({
+    message: '加载中...',
+    forbidClick: true
+  })
+  socket.emit('getChatMsgList', 20, time.value, route.query.orderId)
+
+  // console.log('tt', time.value)
+}
 </script>
 
 <template>
   <div class="room-page">
     <cp-nav-bar title="医生问诊室"></cp-nav-bar>
     <RoomStatus :status="consult?.status!" :countdown="consult?.countdown!"></RoomStatus>
+    <van-pull-refresh v-model="loading" @refresh="onRefresh">
+      <RoomMessage :list="list!"></RoomMessage>
+    </van-pull-refresh>
     <RoomAction
       @send-image="sendImage"
       @send-text="sendText"
       :disabled="consult?.status !== OrderType.ConsultChat"
     ></RoomAction>
-    <RoomMessage :list="list!"></RoomMessage>
     <!-- <botton @click="$router.push(`/order/pay?id=${consult?.prescriptionId}`)">购买药品</botton> -->
   </div>
 </template>

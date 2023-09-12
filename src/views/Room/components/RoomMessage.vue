@@ -2,13 +2,17 @@
 import { MsgType } from '@/enum'
 import type { Image } from '@/types/consultType'
 import { getIllnessTimeText, getConsultFlagText } from '@/utils/filter'
-import { showImagePreview } from 'vant'
-import type { Message } from '@/types/RoomType'
+import { showImagePreview, showToast } from 'vant'
+import type { Message, Prescription } from '@/types/RoomType'
 import { useUserStore } from '@/stores/user'
 import { nextTick } from 'vue'
 import dayjs from 'dayjs'
+import { getPrescriptApi } from '@/serves/consult.d'
+import { useRouter } from 'vue-router'
+import { PrescriptionStatus } from '@/enum/index'
 
 const store = useUserStore()
+const router = useRouter()
 
 const props = defineProps<{
   list: Message[]
@@ -31,6 +35,22 @@ const previewImg = (pictures?: Image[]) => {
 
 const Images = (url: string) => {
   showImagePreview([url])
+}
+
+const showPrescription = async (id?: string) => {
+  if (id) {
+    const res = await getPrescriptApi(id)
+    showImagePreview([res.data.url])
+  }
+}
+
+const buy = (pre?: Prescription) => {
+  if (pre) {
+    if (pre.status === PrescriptionStatus.Invalid) return showToast('处⽅已失效')
+    if (pre.status === PrescriptionStatus.NotPayment && !pre.orderId)
+      return router.push(`/order/pay?id=${pre.id}`)
+    router.push(`/order/${pre.orderId}`)
+  }
 }
 </script>
 
@@ -132,6 +152,39 @@ const Images = (url: string) => {
             fit="contain"
             :src="item.msg.picture!.url"
           />
+        </div>
+      </div>
+
+      <!-- 处⽅ -->
+      <div class="msg msg-recipe" v-if="item.msgType === MsgType.CardPre">
+        <div class="content" v-if="item.msg.prescription">
+          <div class="head van-hairline--bottom">
+            <div class="head-tit">
+              <h3>电⼦处⽅</h3>
+              <p @click="showPrescription(item.msg.prescription?.id)">
+                原始处⽅ <van-icon name="arrow"></van-icon>
+              </p>
+            </div>
+            <p>
+              {{ item.msg.prescription.name }}
+              {{ item.msg.prescription.genderValue }}
+              {{ item.msg.prescription.age }}岁
+              {{ item.msg.prescription.diagnosis }}
+            </p>
+            <p>开⽅时间：{{ item.msg.prescription.createTime }}</p>
+          </div>
+          <div class="body">
+            <div class="body-item" v-for="med in item.msg.prescription.medicines" :key="med.id">
+              <div class="durg">
+                <p>{{ med.name }} {{ med.specs }}</p>
+                <p>{{ med.usageDosag }}</p>
+              </div>
+              <div class="num">x{{ med.quantity }}</div>
+            </div>
+          </div>
+          <div class="foot">
+            <span @click="buy(item.msg.prescription)">购买药品</span>
+          </div>
         </div>
       </div>
     </template>
@@ -313,6 +366,59 @@ const Images = (url: string) => {
     &-cancel {
       .content {
         background-color: #ededed;
+      }
+    }
+  }
+  &-recipe {
+    padding: 15px;
+    .content {
+      background-color: #fff;
+      border-radius: 8px;
+      color: var(--cp-tip);
+      font-size: 12px;
+      flex: 1;
+      .head {
+        padding: 15px;
+        .head-tit {
+          display: flex;
+          justify-content: space-between;
+          > h3 {
+            font-weight: normal;
+            font-size: 16px;
+            color: var(--cp-text1);
+          }
+        }
+        p {
+          margin-top: 5px;
+        }
+      }
+      .body {
+        padding: 15px 15px 0 15px;
+        &-item {
+          display: flex;
+          margin-bottom: 15px;
+          .durg {
+            flex: 1;
+            > p {
+              &:first-child {
+                font-size: 14px;
+                color: var(--cp-text1);
+                margin-bottom: 5px;
+              }
+            }
+          }
+          .num {
+            color: var(--cp-text1);
+          }
+        }
+      }
+      .foot {
+        background-color: var(--cp-plain);
+        color: var(--cp-primary);
+        font-size: 16px;
+        text-align: center;
+        height: 42px;
+        line-height: 42px;
       }
     }
   }

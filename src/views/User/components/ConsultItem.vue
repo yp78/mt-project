@@ -90,7 +90,7 @@ const { delConsult, deleteLoading } = usedelConsult((id) => {
         @click="clearConsult(item)"
         >取消问诊</van-button
       >
-      <van-button type="primary" plain size="small" round :to="`/consult/pay/${item.id}`"
+      <van-button type="primary" plain size="small" round :to="`/user/consult/${item.id}`"
         >去⽀付</van-button
       >
     </div>
